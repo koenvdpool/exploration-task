@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Group play</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 60vh;
+            margin: 0;
+        }
+
+        .large-text {
+            font-size: 3em;
+        }
+    </style>
+    <script>
+
+        function callMainPage() {
+            //window.location.href = '/groupStart';
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/checkParticipants", true);
+            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var response = JSON.parse(xhr.responseText);
+                    document.getElementById("participantCount").textContent = response.data;
+                    document.getElementById("labTimeElapsed").textContent = response.elapsedTime;
+                    if (response.data == response.limit) {
+                        window.location.href = '/groupTotem';
+                    }
+                    var eTime = response.elapsedTime.split(":");
+                    if (parseInt(eTime[0]) > 5)
+                    {
+                        window.location.href = '/groupTotem';
+                    }
+                }
+            };
+            xhr.send();
+        }
+
+
+        setInterval(callMainPage, 1000);
+
+    </script>
+
+</head>
+<body>
+    <div class="large-text">
+        <label>Game initiated. Please wait for the other participants to join.</label>
+        <br />
+        <label>The game will start automatically.</label>
+        <br />
+        <label>Number of current participants: </label><label id="participantCount">{{participantCount}}</label>
+        <br />
+        <label>Maximum number of participants: 6</label>
+        <br />
+        <br />
+        <label>Time elapsed:</label><label id="labTimeElapsed">{{timeElapsed}}</label>
+        <br />
+        <label>Maximum waiting time: 6 mins</label>
+    </div>
+</body>
+</html>

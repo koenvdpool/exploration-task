@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Viewer</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        img {
+            max-width: 100%;
+            max-height: 80vh;
+        }
+
+        button {
+            font-size: 1em;
+            margin: 10px;
+        }
+
+        #redirectButton, #checkboxContainer {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <table>
+        <tr>
+            <th><img id="image" src="/static/totemgame/instructions/s1.PNG" alt="Image"></th>
+        </tr>
+        <tr>
+            <td>
+                <button id="previous" disabled style="font-size:18px;height:35px;"> &lt;&lt;Previous</button>
+                <button id="next" style="font-size:18px;height:35px;">Next&gt;&gt;</button>
+                <div id="checkboxContainer">
+                    <input type="checkbox" id="checkbox"> I consent that my data can be used for research purposes, and may be shared anonymously.
+                </div>
+                <button id="redirectButton" style="font-size:18px;height:35px;">Start</button>
+
+            </td>
+        </tr>
+    </table>
+
+
+        
+    
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const imageElement = document.getElementById('image');
+            const previousButton = document.getElementById('previous');
+            const nextButton = document.getElementById('next');
+            const checkbox = document.getElementById('checkbox');
+            const redirectButton = document.getElementById('redirectButton');
+            const checkboxContainer = document.getElementById('checkboxContainer');
+            let currentImage = 1;
+
+            function updateButtons() {
+                previousButton.disabled = (currentImage === 1);
+                nextButton.disabled = (currentImage === 10);
+
+                if (currentImage === 10) {
+                    checkboxContainer.style.display = 'block';
+                } else {
+                    checkboxContainer.style.display = 'none';
+                }
+            }
+
+            previousButton.addEventListener('click', function () {
+                if (currentImage > 1) {
+                    currentImage--;
+                    imageElement.src = 'static/totemgame/instructions{{ semantic_extension }}/s' + currentImage + '.PNG';
+                    updateButtons();
+                }
+            });
+
+            nextButton.addEventListener('click', function () {
+                if (currentImage < 10) {
+                    currentImage++;
+                    imageElement.src = 'static/totemgame/instructions{{ semantic_extension }}/s' + currentImage + '.PNG';
+                    updateButtons();
+                }
+            });
+
+
+            checkbox.addEventListener('change', function () {
+                if (checkbox.checked) {
+                    redirectButton.style.display = 'block';
+                } else {
+                    redirectButton.style.display = 'none';
+                }
+            });
+
+            redirectButton.addEventListener('click', function () {
+                redirectButton.disabled = true;
+                window.location.href = '/individualTotem';
+            });
+        });
+    </script>
+</body>
+</html>
+
+
+
+

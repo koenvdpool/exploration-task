@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <style>
+
+        .items {
+            float: left;
+            width: 100px;
+            height: 110px;
+            margin: 10px;
+            padding: 10px;
+            border: 1px solid black;
+        }
+
+        .combinations {
+            float: left;
+            width: 100px;
+            height: 110px;
+            margin: 10px;
+            padding: 10px;
+            border: 1px solid black;
+        }
+    </style>
+    <script>
+
+
+        function allowDrop(ev) {
+            ev.preventDefault();
+        }
+
+        function drag(ev) {
+            ev.dataTransfer.setData("text", ev.target.id);
+        }
+
+        function drop(ev) {
+            ev.preventDefault();
+            var data = ev.dataTransfer.getData("text");
+            var target = ev.target;
+
+            // Check if the target combination1 has no child nodes (i.e., no images)
+            if (
+                target.id === "combination1" ||
+                target.id === "combination2" ||
+                target.id === "combination3" 
+            ) {
+                if (target.childElementCount > 0) {
+                    target.removeChild(target.firstChild); // Remove the existing image
+                }
+
+                var copy = document.getElementById(data).cloneNode(true);
+                copy.id = data;
+                target.appendChild(copy);
+            } 
+        }
+
+
+        
+        function removeAllImages() {
+            var divs = document.querySelectorAll('[id^="combination"]');
+            divs.forEach(function (div) {
+                div.innerHTML = "";
+            });
+        }
+
+        function printImageIds() {
+            var divsToPrint = [
+                "combination1",
+                "combination2",
+                "combination3",
+            ];
+            var idsText = "";
+
+            divsToPrint.forEach(function (divId) {
+                var div = document.getElementById(divId);
+                var images = div.querySelectorAll("img");
+                images.forEach(function (image) {
+                    idsText +=
+                        "Image ID in " + divId + ": " + image.id + "\n";
+                });
+            });
+
+            document.getElementById("imageIdsTextarea").value = idsText;
+        }
+
+        var startTime; // To store the timestamp when the user starts viewing the page
+        var timerInterval; // To store the interval for updating the elapsed time
+
+
+        // Calculate and display the elapsed time
+        function updateElapsedTime() {
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/checkElapsedTime", true);
+            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var response = JSON.parse(xhr.responseText);
+                    var currentTime = new Date(response.currentTime);
+                    var startTime = new Date(response.startTime);
+
+                    var elapsedMilliseconds = currentTime - startTime;
+
+                    var hours = Math.floor(elapsedMilliseconds / (1000 * 60 * 60));
+                    var minutes = Math.floor((elapsedMilliseconds % (1000 * 60 * 60)) / (1000 * 60));
+                    var seconds = Math.floor((elapsedMilliseconds % (1000 * 60)) / 1000);
+
+                    if (minutes >= 10 || hours>0) {
+                        // Redirect to another URL
+                        window.location.href = '/experimentComplete';
+                        
+                        return; // Exit the function to prevent further updates
+                    }
+
+                    var formattedTime = padZero(hours) + ":" + padZero(minutes) + ":" + padZero(seconds);
+                    document.getElementById("elapsedTime").innerHTML = formattedTime;
+                }
+            };
+            xhr.send();
+
+            //var startingTimeStr = document.getElementById('startingTime').textContent;
+            //var startingTime = new Date(startingTimeStr);
+
+            //var now = new Date();
+            
+        }
+
+        function getItemIds() {
+
+            document.getElementById("combineBtn").disabled = true;
+
+            // Set a timeout to re-enable the button after 1 second
+            setTimeout(() => {
+                document.getElementById("combineBtn").disabled = false;
+            }, 1000);
+
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/get_item_ids', true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+
+            // Create an object to send the current image IDs to the server
+            var currentItemIds = [];
+            var itemElements = document.querySelectorAll('[id^="combination"] img');
+            itemElements.forEach(function (itemElements) {
+                currentItemIds.push(itemElements.id);
+            });
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    // Request completed, refresh the page
+                    location.reload();
+                }
+            };
+
+            xhr.send(JSON.stringify({ currentItemIds: currentItemIds }));
+
+
+            
+
+        }
+
+
+
+        // Add leading zero to single-digit numbers
+        function padZero(number) {
+            return (number < 10 ? "0" : "") + number;
+        }
+
+        window.onload = function () {
+            var currentTime = new Date();
+            //document.getElementById('startingTime').textContent = currentTime.toISOString();
+            timerInterval = setInterval(updateElapsedTime, 1000); 
+        };
+
+        
+
+
+    </script>
+</head>
+<body>
+
+
+    <table width="1200px" align="center">
+        <tr>
+            <th align="left">
+
+                <table align="left">
+                    <tr>
+                        <th width="120px" align="left">
+                            <div style="font-size:20px;">Elapsed time:</div>
+                        </th>
+                        <th width="160px" align="left">
+                            <div id="elapsedTime" style="font-size: 20px; "></div><div id="startingTime" style="display: none;">{{startingTime}}</div>
+                        </th>
+                        <th width="150px" align="left" >
+                            <div style="font-size: 20px;">Number of trials:</div>
+                        </th>
+                        <th width="140px" align="left">
+                            <div id="numOfTrials" style="font-size: 20px;">{{numOfTrials}}</div>
+                        </th>
+                        <th width="70px" align="left">
+                            <div style="font-size: 20px;">Score:</div>
+                        </th>
+                        <th width="120px" align="left">
+                            <div id="score" style="font-size: 20px;">{{score}}</div>
+                        </th>
+                    </tr>
+                </table>
+
+            </th>
+        </tr>
+        <tr>
+            <th align="left">
+                <h2>Discover a new item:</h2>
+            </th>
+        </tr>
+        <tr>
+            <th align="left" valign="top">
+                <div id="combination1" ondrop="drop(event)" ondragover="allowDrop(event)" class="combinations"></div>
+                <div id="combination2" ondrop="drop(event)" ondragover="allowDrop(event)" class="combinations"></div>
+                <div id="combination3" ondrop="drop(event)" ondragover="allowDrop(event)" class="combinations"></div>
+            </th>
+        </tr>
+        <tr>
+            <th align="left" valign="top">
+                <button id="combineBtn" onclick="getItemIds()" style="font-size:18px;width:100px;height:35px;">Try</button>
+                <button onclick="removeAllImages()" style="font-size:18px;width:80px;height:35px;">Clear</button>
+
+            </th>
+        </tr>
+        <tr>
+            <th align="left">
+
+                <h2>Items discovered:</h2>
+            </th>
+        </tr>
+        <tr>
+            <th align="left">
+
+                {% for itemID in inventoryItemIDs %}
+                <div id="item{{itemID}}" ondrop="drop(event)" ondragover="allowDrop(event)" class="items">
+                    <img src="{{ url_for('static', filename='totemgame/images' ~ semantic_extension + '/' ~ itemID + ".jpg") }}" draggable="true" ondragstart="drag(event)" id="{{itemID}}" width="95" height="105">
+                </div>
+                {% endfor %}
+
+            </th>
+
+        </tr>
+    </table>
+
+</body>
+</html>

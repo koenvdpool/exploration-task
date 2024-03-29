@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Viewer</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        img {
+            max-width: 100%;
+            max-height: 80vh;
+        }
+
+        button {
+            font-size: 1em;
+            margin: 10px;
+        }
+
+        #redirectButton, #checkboxContainer {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <table>
+        <tr>
+            <th><img id="image" src="/static/totemgame/instructions/1-group.JPG" alt="Image">
+                <video id="videoDisplay" controls autoplay source src="/static/totemgame/instructions/group-instructions.mp4" type="video/mp4" style="display:none;" />
+            </th>
+        </tr>
+        <tr>
+            <td>
+                <button id="previous" disabled style="font-size:18px;height:35px;"> &lt;&lt;Previous</button>
+                <button id="next" style="font-size:18px;height:35px;">Next&gt;&gt;</button>
+                <div id="checkboxContainer">
+                    <input type="checkbox" id="checkbox" style="font-size:18px;height:35px;"> I consent that my data can be used for research purposes, and may be shared anonymously.
+                </div>
+                <button id="redirectButton" style="font-size:18px;height:35px;">Start</button>
+
+            </td>
+        </tr>
+    </table>
+
+
+        
+    
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const imageElement = document.getElementById('image');
+            const previousButton = document.getElementById('previous');
+            const nextButton = document.getElementById('next');
+            const checkbox = document.getElementById('checkbox');
+            const redirectButton = document.getElementById('redirectButton');
+            const checkboxContainer = document.getElementById('checkboxContainer');
+            const videoDisplay = document.getElementById('videoDisplay');
+            let currentImage = 1;
+
+            function updateButtons() {
+                previousButton.disabled = (currentImage === 1);
+                nextButton.disabled = (currentImage === 3);
+
+                if (currentImage === 3) {
+                    checkboxContainer.style.display = 'block';
+                } else {
+                    checkboxContainer.style.display = 'none';
+                }
+            }
+
+            previousButton.addEventListener('click', function () {
+                if (currentImage > 1) {
+                    currentImage--;
+                    if (currentImage == 2) {
+                        videoDisplay.style.display = 'block';
+                        imageElement.style.display = 'none';
+                    }
+                    else {
+                        videoDisplay.style.display = 'none';
+                        imageElement.style.display = 'block';
+                        imageElement.src = 'static/totemgame/instructions/' + currentImage + '-group.JPG';
+                    }
+                    updateButtons();
+                }
+            });
+
+            nextButton.addEventListener('click', function () {
+                if (currentImage < 3) {
+                    currentImage++;
+                    if (currentImage == 2) {
+                        videoDisplay.style.display = 'block';
+                        imageElement.style.display = 'none';
+                    }
+                    else {
+                        videoDisplay.style.display = 'none';
+                        imageElement.style.display = 'block';
+                        imageElement.src = 'static/totemgame/instructions/' + currentImage + '-group.JPG';
+                    }
+                    updateButtons();
+                }
+            });
+
+
+            checkbox.addEventListener('change', function () {
+                if (checkbox.checked) {
+                    redirectButton.style.display = 'block';
+                } else {
+                    redirectButton.style.display = 'none';
+                }
+            });
+
+            redirectButton.addEventListener('click', function () {
+                redirectButton.disabled = true;
+                window.location.href = '/groupStart';
+            });
+        });
+    </script>
+</body>
+</html>
+
+
+
+

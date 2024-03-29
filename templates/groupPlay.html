@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Group play</title>
+
+    <script>
+        function startClicked() {
+            var participantCount = document.getElementById("participantCount").value;
+            window.location.href = '/groupStart?participantCount=' + participantCount;
+        }
+
+
+        function joinClicked() {
+            var experimentCode = document.getElementById("experimentCode").value;
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/groupPlay/joinExperiment", true);
+            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var txt = JSON.parse(xhr.responseText);
+                    msg = '';
+                    if (txt == '0') {
+                        msg = ' Experiment is not found.';
+                    }
+                    else if (txt == '1') {
+                        msg = ' Added successfully';
+                        window.location.href = '/groupStart';
+                    }
+                    else if (txt == '-1') {
+                        msg = ' Experiment is full';
+                    }
+                    document.getElementById("response").textContent = msg;
+
+                }
+            };
+
+            xhr.send(JSON.stringify({ experimentCode: experimentCode }));
+
+        }
+    </script>
+
+</head>
+<body>
+    <h1>Start or join a group experiment</h1>
+
+    <label id="labelParticipantCount" for="participantCount">Please select number of participants to start an experiment:</label>
+    <select id="participantCount">
+        <option value="2">2</option>
+        <option value="4">4</option>
+        <option value="6">6</option>
+    </select>
+    <button id="startBtn" onclick="startClicked()">Start</button>
+    <br />
+    or
+    <br />
+    <label>Please provide an experiment code to join an experiment:</label>
+    <textarea id="experimentCode" style="resize:none;height:20px;width:200px;"></textarea>
+    <button id="joinBtn" onclick="joinClicked()">Join</button><label id="response"></label>
+
+    <br>
+    <br>
+
+
+
+</body>
+</html>

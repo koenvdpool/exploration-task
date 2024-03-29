@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <style>
+
+        .items {
+            float: left;
+            width: 100px;
+            height: 110px;
+            margin: 10px;
+            padding: 10px;
+            border: 1px solid black;
+        }
+
+        .combinations {
+            float: left;
+            width: 100px;
+            height: 110px;
+            margin: 10px;
+            padding: 10px;
+            border: 1px solid black;
+        }
+    </style>
+    <script>
+
+
+        function allowDrop(ev) {
+            ev.preventDefault();
+        }
+
+        function drag(ev) {
+            ev.dataTransfer.setData("text", ev.target.id);
+        }
+
+        function drop(ev) {
+            ev.preventDefault();
+            var data = ev.dataTransfer.getData("text");
+            var target = ev.target;
+
+            // Check if the target combination1 has no child nodes (i.e., no images)
+            if (
+                target.id === "combination1" ||
+                target.id === "combination2" ||
+                target.id === "combination3" 
+            ) {
+                if (target.childElementCount > 0) {
+                    target.removeChild(target.firstChild); // Remove the existing image
+                }
+
+                var copy = document.getElementById(data).cloneNode(true);
+                copy.id = data;
+                target.appendChild(copy);
+            } 
+        }
+
+
+        
+        function removeAllImages() {
+            var divs = document.querySelectorAll('[id^="combination"]');
+            divs.forEach(function (div) {
+                div.innerHTML = "";
+            });
+        }
+
+        function printImageIds() {
+            var divsToPrint = [
+                "combination1",
+                "combination2",
+                "combination3",
+            ];
+            var idsText = "";
+
+            divsToPrint.forEach(function (divId) {
+                var div = document.getElementById(divId);
+                var images = div.querySelectorAll("img");
+                images.forEach(function (image) {
+                    idsText +=
+                        "Image ID in " + divId + ": " + image.id + "\n";
+                });
+            });
+
+            document.getElementById("imageIdsTextarea").value = idsText;
+        }
+
+        var startTime; // To store the timestamp when the user starts viewing the page
+        var timerInterval; // To store the interval for updating the elapsed time
+
+
+        // Calculate and display the elapsed time
+        function updateElapsedTime() {
+
+
+            var buttons = document.querySelectorAll('button');
+            var buttonIds = Array.from(buttons).map(button => button.id);
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/tutorialTimeUpdate", true);
+            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var response = JSON.parse(xhr.responseText);
+                    response.data.forEach(function (data) {
+                        var buttonResult = document.getElementById(data.button_id);
+                        var txtArray = buttonResult.textContent.split(" ");
+                        document.getElementById(data.button_id).textContent = txtArray[0] + " (score:" + data.score + ")";
+                    });
+
+
+                }
+            };
+
+            var requestData = { button_ids: buttonIds };
+            xhr.send(JSON.stringify(requestData));
+        }
+
+       
+
+        function getItemIds() {
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/tutorial', true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+
+            // Create an object to send the current image IDs to the server
+            var currentItemIds = [];
+            var itemElements = document.querySelectorAll('[id^="combination"] img');
+            itemElements.forEach(function (itemElements) {
+                currentItemIds.push(itemElements.id);
+            });
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    // Request completed, refresh the page
+                    location.reload();
+                }
+            };
+
+            xhr.send(JSON.stringify({ currentItemIds: currentItemIds }));
+        }
+
+
+
+        // Add leading zero to single-digit numbers
+        function padZero(number) {
+            return (number < 10 ? "0" : "") + number;
+        }
+
+        window.onload = function () {
+            //var currentTime = new Date();
+            //document.getElementById('startingTime').textContent = currentTime.toISOString();
+            //timerInterval = setInterval(updateElapsedTime, 1000); 
+        };
+
+
+        function pButtonClicked(buttonId) {
+            var innoParticipant = document.getElementById("innoParticipant");
+            innoParticipant.innerHTML = "<h2>Items found by the participant:</h2>";
+            innoParticipant.style = "visibility:hidden;"
+
+            var dispDiv = document.getElementById("displayItems");
+            dispDiv.innerHTML = "";
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/btnParticipantTutorial", true);
+            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var response = JSON.parse(xhr.responseText);
+                    //additionalDataDiv.innerHTML = "<h2>Additional Data:</h2>";
+
+                    response.forEach(function (image) {
+                        var imageElement = document.createElement("img");
+                        innoParticipant.style = "visibility:visible;"
+                        imageElement.src = "static/totemgame/images{{ semantic_extension }}/" + image.name + ".jpg";
+                        imageElement.width = 95;
+                        imageElement.height = 105;
+                        // Add onclick event for the image
+                        imageElement.onclick = function () {
+                            dispRule(image.name);
+                        };
+                        //imageElement.alt = image.name;
+                        //imageElement.title = "ID: " + image.name + ", Name: " + image.name;
+                        var divElement = document.createElement("div");
+                        divElement.style = "float: left;width: 100px;height: 110px;margin: 10px;padding: 10px;border: 1px solid black; items";
+                        divElement.innerHTML = "";
+                        divElement.appendChild(imageElement)
+                        innoParticipant.appendChild(divElement);
+                    });
+                }
+            };
+
+            var data = JSON.stringify({ buttonId: buttonId });
+            xhr.send(data);
+        }
+
+        function dispRule(item) {
+
+            var innoParticipant = document.getElementById("displayItems");
+            innoParticipant.innerHTML = "<h2>Which items to combine?</h2>";
+            innoParticipant.style = "visibility:hidden;"
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/dispRuleTutorial", true);
+            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var response = JSON.parse(xhr.responseText);
+
+                    response.forEach(function (image) {
+                        innoParticipant.style = "visibility:visible;"
+                        var imageElement = document.createElement("img");
+                        imageElement.src = "static/totemgame/images{{ semantic_extension }}/" + image.name + ".jpg";
+                        imageElement.width = 95;
+                        imageElement.height = 105;
+
+                        //imageElement.alt = image.name;
+                        //imageElement.title = "ID: " + image.name + ", Name: " + image.name;
+                        
+                        var divElement = document.createElement("div");
+                        divElement.style = "float: left;width: 100px;height: 110px;margin: 10px;padding: 10px;border: 1px solid black; items";
+                        divElement.innerHTML = "";
+                        divElement.appendChild(imageElement)                        
+                        innoParticipant.appendChild(divElement);
+                    });
+                }
+            };
+
+            var data = JSON.stringify({ item: item });
+            xhr.send(data);
+        }
+
+
+    </script>
+</head>
+<body>
+    <div id="content"></div>
+
+    <table width="1200px" align="center">
+        <tr>
+            <th align="left">
+                
+                <table align="left">
+                    <tr>
+                        <th width="120px" align="left">
+
+                        </th>
+                        <th width="160px" align="left">
+
+                        </th>
+                        <th width="150px" align="left">
+                            <div style="font-size: 20px;">Number of trials:</div>
+                        </th>
+                        <th width="140px" align="left">
+                            <div id="numOfTrials" style="font-size: 20px;">{{numOfTrials}}</div>
+                        </th>
+                        <th width="70px" align="left">
+                            <div style="font-size: 20px;">Score:</div>
+                        </th>
+                        <th width="120px" align="left">
+                            <div id="score" style="font-size: 20px;">{{score}}</div>
+                        </th>
+                    </tr>
+                </table>
+
+            </th>
+        </tr>
+        <tr>
+            <th align="left">
+                <br>
+                <h2>Discover a new item:</h2>
+            </th>
+        </tr>
+        <tr>
+            <th align="left" valign="top">
+                <div id="combination1" ondrop="drop(event)" ondragover="allowDrop(event)" class="combinations"></div>
+                <div id="combination2" ondrop="drop(event)" ondragover="allowDrop(event)" class="combinations"></div>
+                <div id="combination3" ondrop="drop(event)" ondragover="allowDrop(event)" class="combinations"></div>
+                
+            </th>
+        </tr>
+        <tr>
+            <th align="left" valign="top">
+                <button onclick="getItemIds()" style="font-size:18px;width:100px;height:35px;">Combine</button>
+                <button onclick="removeAllImages()" style="font-size:18px;width:80px;height:35px;">Clear</button>
+
+            </th>
+        </tr>
+        <tr>
+            <th align="left">
+                <div id="messageDisplay" style="font-size: 25px;color:red;">{{messageDisplay}}</div>
+                <br>
+                <h2>Items discovered:</h2>
+            </th>
+        </tr>
+        <tr>
+            <th align="left">
+
+                {% for itemID in inventoryItemIDs %}
+                <div id="item{{itemID}}" ondrop="drop(event)" ondragover="allowDrop(event)" class="items">
+                    <img src="{{ url_for('static', filename='totemgame/images' ~ semantic_extension + '/' ~ itemID + ".jpg") }}" draggable="true" ondragstart="drag(event)" id="{{itemID}}" width="95" height="105">
+                </div>
+                {% endfor %}
+
+            </th>
+
+        </tr>
+        <tr>
+            <th align="left">
+                {% for participant in participants %}
+                <button onclick="pButtonClicked('{{participant[0]}}')" id="{{participant[0]}}" style="font-size:18px;height:35px;">Participant{{participant[1]}} (score:{{participant[2]}})</button>
+                {% endfor %}
+
+                <div id="innoParticipant"></div>
+
+            </th>
+
+        </tr>
+        <tr>
+            <th align="left">
+
+                <div id="displayItems"></div>
+            </th>
+
+        </tr>
+    </table>
+
+    <br />
+    <br />
+</body>
+</html>

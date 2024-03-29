@@ -1,0 +1,519 @@
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>56abd7f4-3751-4b2d-8b7f-e0cc7bf8632b</ProjectGuid>
+    <ProjectHome>
+    </ProjectHome>
+    <ProjectTypeGuids>{1b580a1a-fdb3-4b32-83e1-6407eb2722e6};{349c5851-65df-11da-9384-00065b846f21};{888888a0-9f3d-457c-b088-3a5042f75d52}</ProjectTypeGuids>
+    <StartupFile>app.py</StartupFile>
+    <SearchPath>
+    </SearchPath>
+    <WorkingDirectory>.</WorkingDirectory>
+    <LaunchProvider>Web launcher</LaunchProvider>
+    <WebBrowserUrl>http://localhost</WebBrowserUrl>
+    <OutputPath>.</OutputPath>
+    <SuppressCollectPythonCloudServiceFiles>true</SuppressCollectPythonCloudServiceFiles>
+    <Name>toolMakingTask</Name>
+    <RootNamespace>WebProject1</RootNamespace>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="app.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="views.py">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="requirements.txt" />
+    <Content Include="static\totemgame\images\1.jpg" />
+    <Content Include="static\totemgame\images\10.jpg" />
+    <Content Include="static\totemgame\images\100.jpg" />
+    <Content Include="static\totemgame\images\101.jpg" />
+    <Content Include="static\totemgame\images\102.jpg" />
+    <Content Include="static\totemgame\images\103.jpg" />
+    <Content Include="static\totemgame\images\104.jpg" />
+    <Content Include="static\totemgame\images\105.jpg" />
+    <Content Include="static\totemgame\images\106.jpg" />
+    <Content Include="static\totemgame\images\107.jpg" />
+    <Content Include="static\totemgame\images\108.jpg" />
+    <Content Include="static\totemgame\images\109.jpg" />
+    <Content Include="static\totemgame\images\11.jpg" />
+    <Content Include="static\totemgame\images\110.jpg" />
+    <Content Include="static\totemgame\images\111.jpg" />
+    <Content Include="static\totemgame\images\112.jpg" />
+    <Content Include="static\totemgame\images\113.jpg" />
+    <Content Include="static\totemgame\images\114.jpg" />
+    <Content Include="static\totemgame\images\115.jpg" />
+    <Content Include="static\totemgame\images\116.jpg" />
+    <Content Include="static\totemgame\images\117.jpg" />
+    <Content Include="static\totemgame\images\118.jpg" />
+    <Content Include="static\totemgame\images\119.jpg" />
+    <Content Include="static\totemgame\images\12.jpg" />
+    <Content Include="static\totemgame\images\120.jpg" />
+    <Content Include="static\totemgame\images\121.jpg" />
+    <Content Include="static\totemgame\images\122.jpg" />
+    <Content Include="static\totemgame\images\123.jpg" />
+    <Content Include="static\totemgame\images\124.jpg" />
+    <Content Include="static\totemgame\images\125.jpg" />
+    <Content Include="static\totemgame\images\126.jpg" />
+    <Content Include="static\totemgame\images\127.jpg" />
+    <Content Include="static\totemgame\images\128.jpg" />
+    <Content Include="static\totemgame\images\129.jpg" />
+    <Content Include="static\totemgame\images\13.jpg" />
+    <Content Include="static\totemgame\images\130.jpg" />
+    <Content Include="static\totemgame\images\131.jpg" />
+    <Content Include="static\totemgame\images\132.jpg" />
+    <Content Include="static\totemgame\images\133.jpg" />
+    <Content Include="static\totemgame\images\134.jpg" />
+    <Content Include="static\totemgame\images\135.jpg" />
+    <Content Include="static\totemgame\images\136.jpg" />
+    <Content Include="static\totemgame\images\137.jpg" />
+    <Content Include="static\totemgame\images\138.jpg" />
+    <Content Include="static\totemgame\images\139.jpg" />
+    <Content Include="static\totemgame\images\14.jpg" />
+    <Content Include="static\totemgame\images\140.jpg" />
+    <Content Include="static\totemgame\images\141.jpg" />
+    <Content Include="static\totemgame\images\142.jpg" />
+    <Content Include="static\totemgame\images\143.jpg" />
+    <Content Include="static\totemgame\images\144.jpg" />
+    <Content Include="static\totemgame\images\145.jpg" />
+    <Content Include="static\totemgame\images\146.jpg" />
+    <Content Include="static\totemgame\images\147.jpg" />
+    <Content Include="static\totemgame\images\148.jpg" />
+    <Content Include="static\totemgame\images\149.jpg" />
+    <Content Include="static\totemgame\images\15.jpg" />
+    <Content Include="static\totemgame\images\150.jpg" />
+    <Content Include="static\totemgame\images\151.jpg" />
+    <Content Include="static\totemgame\images\152.jpg" />
+    <Content Include="static\totemgame\images\153.jpg" />
+    <Content Include="static\totemgame\images\154.jpg" />
+    <Content Include="static\totemgame\images\155.jpg" />
+    <Content Include="static\totemgame\images\156.jpg" />
+    <Content Include="static\totemgame\images\157.jpg" />
+    <Content Include="static\totemgame\images\158.jpg" />
+    <Content Include="static\totemgame\images\159.jpg" />
+    <Content Include="static\totemgame\images\16.jpg" />
+    <Content Include="static\totemgame\images\160.jpg" />
+    <Content Include="static\totemgame\images\161.jpg" />
+    <Content Include="static\totemgame\images\162.jpg" />
+    <Content Include="static\totemgame\images\163.jpg" />
+    <Content Include="static\totemgame\images\164.jpg" />
+    <Content Include="static\totemgame\images\165.jpg" />
+    <Content Include="static\totemgame\images\166.jpg" />
+    <Content Include="static\totemgame\images\167.jpg" />
+    <Content Include="static\totemgame\images\168.jpg" />
+    <Content Include="static\totemgame\images\169.jpg" />
+    <Content Include="static\totemgame\images\17.jpg" />
+    <Content Include="static\totemgame\images\170.jpg" />
+    <Content Include="static\totemgame\images\171.jpg" />
+    <Content Include="static\totemgame\images\172.jpg" />
+    <Content Include="static\totemgame\images\173.jpg" />
+    <Content Include="static\totemgame\images\174.jpg" />
+    <Content Include="static\totemgame\images\175.jpg" />
+    <Content Include="static\totemgame\images\176.jpg" />
+    <Content Include="static\totemgame\images\177.jpg" />
+    <Content Include="static\totemgame\images\178.jpg" />
+    <Content Include="static\totemgame\images\179.jpg" />
+    <Content Include="static\totemgame\images\18.jpg" />
+    <Content Include="static\totemgame\images\180.jpg" />
+    <Content Include="static\totemgame\images\181.jpg" />
+    <Content Include="static\totemgame\images\182.jpg" />
+    <Content Include="static\totemgame\images\183.jpg" />
+    <Content Include="static\totemgame\images\184.jpg" />
+    <Content Include="static\totemgame\images\185.jpg" />
+    <Content Include="static\totemgame\images\186.jpg" />
+    <Content Include="static\totemgame\images\187.jpg" />
+    <Content Include="static\totemgame\images\188.jpg" />
+    <Content Include="static\totemgame\images\189.jpg" />
+    <Content Include="static\totemgame\images\19.jpg" />
+    <Content Include="static\totemgame\images\190.jpg" />
+    <Content Include="static\totemgame\images\191.jpg" />
+    <Content Include="static\totemgame\images\192.jpg" />
+    <Content Include="static\totemgame\images\2.jpg" />
+    <Content Include="static\totemgame\images\20.jpg" />
+    <Content Include="static\totemgame\images\21.jpg" />
+    <Content Include="static\totemgame\images\22.jpg" />
+    <Content Include="static\totemgame\images\23.jpg" />
+    <Content Include="static\totemgame\images\24.jpg" />
+    <Content Include="static\totemgame\images\25.jpg" />
+    <Content Include="static\totemgame\images\26.jpg" />
+    <Content Include="static\totemgame\images\27.jpg" />
+    <Content Include="static\totemgame\images\28.jpg" />
+    <Content Include="static\totemgame\images\29.jpg" />
+    <Content Include="static\totemgame\images\3.jpg" />
+    <Content Include="static\totemgame\images\30.jpg" />
+    <Content Include="static\totemgame\images\31.jpg" />
+    <Content Include="static\totemgame\images\32.jpg" />
+    <Content Include="static\totemgame\images\33.jpg" />
+    <Content Include="static\totemgame\images\34.jpg" />
+    <Content Include="static\totemgame\images\35.jpg" />
+    <Content Include="static\totemgame\images\36.jpg" />
+    <Content Include="static\totemgame\images\37.jpg" />
+    <Content Include="static\totemgame\images\38.jpg" />
+    <Content Include="static\totemgame\images\39.jpg" />
+    <Content Include="static\totemgame\images\4.jpg" />
+    <Content Include="static\totemgame\images\40.jpg" />
+    <Content Include="static\totemgame\images\41.jpg" />
+    <Content Include="static\totemgame\images\42.jpg" />
+    <Content Include="static\totemgame\images\43.jpg" />
+    <Content Include="static\totemgame\images\44.jpg" />
+    <Content Include="static\totemgame\images\45.jpg" />
+    <Content Include="static\totemgame\images\46.jpg" />
+    <Content Include="static\totemgame\images\47.jpg" />
+    <Content Include="static\totemgame\images\48.jpg" />
+    <Content Include="static\totemgame\images\49.jpg" />
+    <Content Include="static\totemgame\images\5.jpg" />
+    <Content Include="static\totemgame\images\50.jpg" />
+    <Content Include="static\totemgame\images\51.jpg" />
+    <Content Include="static\totemgame\images\52.jpg" />
+    <Content Include="static\totemgame\images\53.jpg" />
+    <Content Include="static\totemgame\images\54.jpg" />
+    <Content Include="static\totemgame\images\55.jpg" />
+    <Content Include="static\totemgame\images\56.jpg" />
+    <Content Include="static\totemgame\images\57.jpg" />
+    <Content Include="static\totemgame\images\58.jpg" />
+    <Content Include="static\totemgame\images\59.jpg" />
+    <Content Include="static\totemgame\images\6.jpg" />
+    <Content Include="static\totemgame\images\60.jpg" />
+    <Content Include="static\totemgame\images\61.jpg" />
+    <Content Include="static\totemgame\images\62.jpg" />
+    <Content Include="static\totemgame\images\63.jpg" />
+    <Content Include="static\totemgame\images\64.jpg" />
+    <Content Include="static\totemgame\images\65.jpg" />
+    <Content Include="static\totemgame\images\66.jpg" />
+    <Content Include="static\totemgame\images\67.jpg" />
+    <Content Include="static\totemgame\images\68.jpg" />
+    <Content Include="static\totemgame\images\69.jpg" />
+    <Content Include="static\totemgame\images\7.jpg" />
+    <Content Include="static\totemgame\images\70.jpg" />
+    <Content Include="static\totemgame\images\71.jpg" />
+    <Content Include="static\totemgame\images\72.jpg" />
+    <Content Include="static\totemgame\images\73.jpg" />
+    <Content Include="static\totemgame\images\74.jpg" />
+    <Content Include="static\totemgame\images\75.jpg" />
+    <Content Include="static\totemgame\images\76.jpg" />
+    <Content Include="static\totemgame\images\77.jpg" />
+    <Content Include="static\totemgame\images\78.jpg" />
+    <Content Include="static\totemgame\images\79.jpg" />
+    <Content Include="static\totemgame\images\8.jpg" />
+    <Content Include="static\totemgame\images\80.jpg" />
+    <Content Include="static\totemgame\images\81.jpg" />
+    <Content Include="static\totemgame\images\82.jpg" />
+    <Content Include="static\totemgame\images\83.jpg" />
+    <Content Include="static\totemgame\images\84.jpg" />
+    <Content Include="static\totemgame\images\85.jpg" />
+    <Content Include="static\totemgame\images\86.jpg" />
+    <Content Include="static\totemgame\images\87.jpg" />
+    <Content Include="static\totemgame\images\88.jpg" />
+    <Content Include="static\totemgame\images\89.jpg" />
+    <Content Include="static\totemgame\images\9.jpg" />
+    <Content Include="static\totemgame\images\90.jpg" />
+    <Content Include="static\totemgame\images\91.jpg" />
+    <Content Include="static\totemgame\images\92.jpg" />
+    <Content Include="static\totemgame\images\93.jpg" />
+    <Content Include="static\totemgame\images\94.jpg" />
+    <Content Include="static\totemgame\images\95.jpg" />
+    <Content Include="static\totemgame\images\96.jpg" />
+    <Content Include="static\totemgame\images\97.jpg" />
+    <Content Include="static\totemgame\images\98.jpg" />
+    <Content Include="static\totemgame\images\99.jpg" />
+    <Content Include="static\totemgame\images-semantic\1.jpg" />
+    <Content Include="static\totemgame\images-semantic\101.jpg" />
+    <Content Include="static\totemgame\images-semantic\102.jpg" />
+    <Content Include="static\totemgame\images-semantic\103.jpg" />
+    <Content Include="static\totemgame\images-semantic\104.jpg" />
+    <Content Include="static\totemgame\images-semantic\105.jpg" />
+    <Content Include="static\totemgame\images-semantic\106.jpg" />
+    <Content Include="static\totemgame\images-semantic\107.jpg" />
+    <Content Include="static\totemgame\images-semantic\108.jpg" />
+    <Content Include="static\totemgame\images-semantic\109.jpg" />
+    <Content Include="static\totemgame\images-semantic\11.jpg" />
+    <Content Include="static\totemgame\images-semantic\110.jpg" />
+    <Content Include="static\totemgame\images-semantic\111.jpg" />
+    <Content Include="static\totemgame\images-semantic\112.jpg" />
+    <Content Include="static\totemgame\images-semantic\113.jpg" />
+    <Content Include="static\totemgame\images-semantic\114.jpg" />
+    <Content Include="static\totemgame\images-semantic\115.jpg" />
+    <Content Include="static\totemgame\images-semantic\116.jpg" />
+    <Content Include="static\totemgame\images-semantic\117.jpg" />
+    <Content Include="static\totemgame\images-semantic\118.jpg" />
+    <Content Include="static\totemgame\images-semantic\119.jpg" />
+    <Content Include="static\totemgame\images-semantic\12.jpg" />
+    <Content Include="static\totemgame\images-semantic\120.jpg" />
+    <Content Include="static\totemgame\images-semantic\121.jpg" />
+    <Content Include="static\totemgame\images-semantic\122.jpg" />
+    <Content Include="static\totemgame\images-semantic\123.jpg" />
+    <Content Include="static\totemgame\images-semantic\124.jpg" />
+    <Content Include="static\totemgame\images-semantic\125.jpg" />
+    <Content Include="static\totemgame\images-semantic\126.jpg" />
+    <Content Include="static\totemgame\images-semantic\127.jpg" />
+    <Content Include="static\totemgame\images-semantic\128.jpg" />
+    <Content Include="static\totemgame\images-semantic\129.jpg" />
+    <Content Include="static\totemgame\images-semantic\13.jpg" />
+    <Content Include="static\totemgame\images-semantic\130.jpg" />
+    <Content Include="static\totemgame\images-semantic\131.jpg" />
+    <Content Include="static\totemgame\images-semantic\132.jpg" />
+    <Content Include="static\totemgame\images-semantic\133.jpg" />
+    <Content Include="static\totemgame\images-semantic\134.jpg" />
+    <Content Include="static\totemgame\images-semantic\135.jpg" />
+    <Content Include="static\totemgame\images-semantic\136.jpg" />
+    <Content Include="static\totemgame\images-semantic\137.jpg" />
+    <Content Include="static\totemgame\images-semantic\138.jpg" />
+    <Content Include="static\totemgame\images-semantic\139.jpg" />
+    <Content Include="static\totemgame\images-semantic\14.jpg" />
+    <Content Include="static\totemgame\images-semantic\15.jpg" />
+    <Content Include="static\totemgame\images-semantic\16.jpg" />
+    <Content Include="static\totemgame\images-semantic\17.jpg" />
+    <Content Include="static\totemgame\images-semantic\18.jpg" />
+    <Content Include="static\totemgame\images-semantic\19.jpg" />
+    <Content Include="static\totemgame\images-semantic\2.jpg" />
+    <Content Include="static\totemgame\images-semantic\20.jpg" />
+    <Content Include="static\totemgame\images-semantic\201.jpg" />
+    <Content Include="static\totemgame\images-semantic\202.jpg" />
+    <Content Include="static\totemgame\images-semantic\203.jpg" />
+    <Content Include="static\totemgame\images-semantic\204.jpg" />
+    <Content Include="static\totemgame\images-semantic\205.jpg" />
+    <Content Include="static\totemgame\images-semantic\206.jpg" />
+    <Content Include="static\totemgame\images-semantic\207.jpg" />
+    <Content Include="static\totemgame\images-semantic\208.jpg" />
+    <Content Include="static\totemgame\images-semantic\209.jpg" />
+    <Content Include="static\totemgame\images-semantic\21.jpg" />
+    <Content Include="static\totemgame\images-semantic\210.jpg" />
+    <Content Include="static\totemgame\images-semantic\211.jpg" />
+    <Content Include="static\totemgame\images-semantic\212.jpg" />
+    <Content Include="static\totemgame\images-semantic\213.jpg" />
+    <Content Include="static\totemgame\images-semantic\214.jpg" />
+    <Content Include="static\totemgame\images-semantic\215.jpg" />
+    <Content Include="static\totemgame\images-semantic\216.jpg" />
+    <Content Include="static\totemgame\images-semantic\217.jpg" />
+    <Content Include="static\totemgame\images-semantic\218.jpg" />
+    <Content Include="static\totemgame\images-semantic\219.jpg" />
+    <Content Include="static\totemgame\images-semantic\22.jpg" />
+    <Content Include="static\totemgame\images-semantic\220.jpg" />
+    <Content Include="static\totemgame\images-semantic\221.jpg" />
+    <Content Include="static\totemgame\images-semantic\222.jpg" />
+    <Content Include="static\totemgame\images-semantic\223.jpg" />
+    <Content Include="static\totemgame\images-semantic\224.jpg" />
+    <Content Include="static\totemgame\images-semantic\225.jpg" />
+    <Content Include="static\totemgame\images-semantic\226.jpg" />
+    <Content Include="static\totemgame\images-semantic\227.jpg" />
+    <Content Include="static\totemgame\images-semantic\228.jpg" />
+    <Content Include="static\totemgame\images-semantic\229.jpg" />
+    <Content Include="static\totemgame\images-semantic\23.jpg" />
+    <Content Include="static\totemgame\images-semantic\230.jpg" />
+    <Content Include="static\totemgame\images-semantic\231.jpg" />
+    <Content Include="static\totemgame\images-semantic\232.jpg" />
+    <Content Include="static\totemgame\images-semantic\233.jpg" />
+    <Content Include="static\totemgame\images-semantic\234.jpg" />
+    <Content Include="static\totemgame\images-semantic\235.jpg" />
+    <Content Include="static\totemgame\images-semantic\236.jpg" />
+    <Content Include="static\totemgame\images-semantic\237.jpg" />
+    <Content Include="static\totemgame\images-semantic\238.jpg" />
+    <Content Include="static\totemgame\images-semantic\239.jpg" />
+    <Content Include="static\totemgame\images-semantic\24.jpg" />
+    <Content Include="static\totemgame\images-semantic\240.jpg" />
+    <Content Include="static\totemgame\images-semantic\241.jpg" />
+    <Content Include="static\totemgame\images-semantic\242.jpg" />
+    <Content Include="static\totemgame\images-semantic\243.jpg" />
+    <Content Include="static\totemgame\images-semantic\244.jpg" />
+    <Content Include="static\totemgame\images-semantic\245.jpg" />
+    <Content Include="static\totemgame\images-semantic\246.jpg" />
+    <Content Include="static\totemgame\images-semantic\247.jpg" />
+    <Content Include="static\totemgame\images-semantic\248.jpg" />
+    <Content Include="static\totemgame\images-semantic\249.jpg" />
+    <Content Include="static\totemgame\images-semantic\25.jpg" />
+    <Content Include="static\totemgame\images-semantic\250.jpg" />
+    <Content Include="static\totemgame\images-semantic\251.jpg" />
+    <Content Include="static\totemgame\images-semantic\252.jpg" />
+    <Content Include="static\totemgame\images-semantic\253.jpg" />
+    <Content Include="static\totemgame\images-semantic\254.jpg" />
+    <Content Include="static\totemgame\images-semantic\255.jpg" />
+    <Content Include="static\totemgame\images-semantic\256.jpg" />
+    <Content Include="static\totemgame\images-semantic\257.jpg" />
+    <Content Include="static\totemgame\images-semantic\258.jpg" />
+    <Content Include="static\totemgame\images-semantic\259.jpg" />
+    <Content Include="static\totemgame\images-semantic\26.jpg" />
+    <Content Include="static\totemgame\images-semantic\260.jpg" />
+    <Content Include="static\totemgame\images-semantic\261.jpg" />
+    <Content Include="static\totemgame\images-semantic\262.jpg" />
+    <Content Include="static\totemgame\images-semantic\263.jpg" />
+    <Content Include="static\totemgame\images-semantic\264.jpg" />
+    <Content Include="static\totemgame\images-semantic\265.jpg" />
+    <Content Include="static\totemgame\images-semantic\266.jpg" />
+    <Content Include="static\totemgame\images-semantic\267.jpg" />
+    <Content Include="static\totemgame\images-semantic\268.jpg" />
+    <Content Include="static\totemgame\images-semantic\269.jpg" />
+    <Content Include="static\totemgame\images-semantic\27.jpg" />
+    <Content Include="static\totemgame\images-semantic\270.jpg" />
+    <Content Include="static\totemgame\images-semantic\271.jpg" />
+    <Content Include="static\totemgame\images-semantic\272.jpg" />
+    <Content Include="static\totemgame\images-semantic\273.jpg" />
+    <Content Include="static\totemgame\images-semantic\274.jpg" />
+    <Content Include="static\totemgame\images-semantic\275.jpg" />
+    <Content Include="static\totemgame\images-semantic\276.jpg" />
+    <Content Include="static\totemgame\images-semantic\277.jpg" />
+    <Content Include="static\totemgame\images-semantic\278.jpg" />
+    <Content Include="static\totemgame\images-semantic\279.jpg" />
+    <Content Include="static\totemgame\images-semantic\28.jpg" />
+    <Content Include="static\totemgame\images-semantic\280.jpg" />
+    <Content Include="static\totemgame\images-semantic\281.jpg" />
+    <Content Include="static\totemgame\images-semantic\282.jpg" />
+    <Content Include="static\totemgame\images-semantic\283.jpg" />
+    <Content Include="static\totemgame\images-semantic\284.jpg" />
+    <Content Include="static\totemgame\images-semantic\285.jpg" />
+    <Content Include="static\totemgame\images-semantic\286.jpg" />
+    <Content Include="static\totemgame\images-semantic\287.jpg" />
+    <Content Include="static\totemgame\images-semantic\288.jpg" />
+    <Content Include="static\totemgame\images-semantic\289.jpg" />
+    <Content Include="static\totemgame\images-semantic\29.jpg" />
+    <Content Include="static\totemgame\images-semantic\290.jpg" />
+    <Content Include="static\totemgame\images-semantic\291.jpg" />
+    <Content Include="static\totemgame\images-semantic\292.jpg" />
+    <Content Include="static\totemgame\images-semantic\293.jpg" />
+    <Content Include="static\totemgame\images-semantic\294.jpg" />
+    <Content Include="static\totemgame\images-semantic\295.jpg" />
+    <Content Include="static\totemgame\images-semantic\296.jpg" />
+    <Content Include="static\totemgame\images-semantic\297.jpg" />
+    <Content Include="static\totemgame\images-semantic\298.jpg" />
+    <Content Include="static\totemgame\images-semantic\299.jpg" />
+    <Content Include="static\totemgame\images-semantic\3.jpg" />
+    <Content Include="static\totemgame\images-semantic\30.jpg" />
+    <Content Include="static\totemgame\images-semantic\300.jpg" />
+    <Content Include="static\totemgame\images-semantic\301.jpg" />
+    <Content Include="static\totemgame\images-semantic\302.jpg" />
+    <Content Include="static\totemgame\images-semantic\303.jpg" />
+    <Content Include="static\totemgame\images-semantic\304.jpg" />
+    <Content Include="static\totemgame\images-semantic\305.jpg" />
+    <Content Include="static\totemgame\images-semantic\306.jpg" />
+    <Content Include="static\totemgame\images-semantic\307.jpg" />
+    <Content Include="static\totemgame\images-semantic\308.jpg" />
+    <Content Include="static\totemgame\images-semantic\309.jpg" />
+    <Content Include="static\totemgame\images-semantic\31.jpg" />
+    <Content Include="static\totemgame\images-semantic\310.jpg" />
+    <Content Include="static\totemgame\images-semantic\311.jpg" />
+    <Content Include="static\totemgame\images-semantic\312.jpg" />
+    <Content Include="static\totemgame\images-semantic\313.jpg" />
+    <Content Include="static\totemgame\images-semantic\314.jpg" />
+    <Content Include="static\totemgame\images-semantic\315.jpg" />
+    <Content Include="static\totemgame\images-semantic\316.jpg" />
+    <Content Include="static\totemgame\images-semantic\317.jpg" />
+    <Content Include="static\totemgame\images-semantic\318.jpg" />
+    <Content Include="static\totemgame\images-semantic\319.jpg" />
+    <Content Include="static\totemgame\images-semantic\32.jpg" />
+    <Content Include="static\totemgame\images-semantic\320.jpg" />
+    <Content Include="static\totemgame\images-semantic\33.jpg" />
+    <Content Include="static\totemgame\images-semantic\34.jpg" />
+    <Content Include="static\totemgame\images-semantic\35.jpg" />
+    <Content Include="static\totemgame\images-semantic\36.jpg" />
+    <Content Include="static\totemgame\images-semantic\37.jpg" />
+    <Content Include="static\totemgame\images-semantic\4.jpg" />
+    <Content Include="static\totemgame\images-semantic\5.jpg" />
+    <Content Include="static\totemgame\images-semantic\6.jpg" />
+    <Content Include="static\totemgame\instructions\1-group.JPG" />
+    <Content Include="static\totemgame\instructions\1.JPG" />
+    <Content Include="static\totemgame\instructions\3-group.JPG" />
+    <Content Include="static\totemgame\instructions\2.JPG" />
+    <Content Include="static\totemgame\instructions\3.JPG" />
+    <Content Include="static\totemgame\instructions\4.JPG" />
+    <Content Include="static\totemgame\instructions\s1.PNG" />
+    <Content Include="static\totemgame\instructions\s10.PNG" />
+    <Content Include="static\totemgame\instructions\s11.PNG" />
+    <Content Include="static\totemgame\instructions\s12.PNG" />
+    <Content Include="static\totemgame\instructions\s2.PNG" />
+    <Content Include="static\totemgame\instructions\s3.PNG" />
+    <Content Include="static\totemgame\instructions\s4.PNG" />
+    <Content Include="static\totemgame\instructions\s5.PNG" />
+    <Content Include="static\totemgame\instructions\s6.PNG" />
+    <Content Include="static\totemgame\instructions\s7.PNG" />
+    <Content Include="static\totemgame\instructions\s8.PNG" />
+    <Content Include="static\totemgame\instructions\s9.PNG" />
+    <Content Include="static\totemgame\instructions\Slide1.PNG" />
+    <Content Include="static\totemgame\instructions\Slide10.PNG" />
+    <Content Include="static\totemgame\instructions\Slide11.PNG" />
+    <Content Include="static\totemgame\instructions\Slide12.PNG" />
+    <Content Include="static\totemgame\instructions\Slide13.PNG" />
+    <Content Include="static\totemgame\instructions\Slide14.PNG" />
+    <Content Include="static\totemgame\instructions\Slide15.PNG" />
+    <Content Include="static\totemgame\instructions\Slide16.PNG" />
+    <Content Include="static\totemgame\instructions\Slide2.PNG" />
+    <Content Include="static\totemgame\instructions\Slide3.PNG" />
+    <Content Include="static\totemgame\instructions\Slide4.PNG" />
+    <Content Include="static\totemgame\instructions\Slide5.PNG" />
+    <Content Include="static\totemgame\instructions\Slide6.PNG" />
+    <Content Include="static\totemgame\instructions\Slide7.PNG" />
+    <Content Include="static\totemgame\instructions\Slide8.PNG" />
+    <Content Include="static\totemgame\instructions\Slide9.PNG" />
+    <Content Include="static\totemgame\rules.csv" />
+    <Content Include="templates\expClosed.html" />
+    <Content Include="templates\groupIntro - Copy.html" />
+    <Content Include="templates\groupIntro.html" />
+    <Content Include="templates\totemTutorial.html" />
+    <Content Include="templates\noID.html" />
+    <Content Include="templates\done.html" />
+    <Content Include="templates\groupStart.html" />
+    <Content Include="templates\groupPlay.html" />
+    <Content Include="templates\groupTotem.html" />
+    <Content Include="templates\index.html" />
+    <Content Include="templates\individualTotem.html" />
+    <Content Include="templates\IndIntro.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="static\" />
+    <Folder Include="static\totemgame\" />
+    <Folder Include="static\totemgame\images\" />
+    <Folder Include="static\totemgame\images-semantic\" />
+    <Folder Include="static\totemgame\instructions\" />
+    <Folder Include="templates\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.Web.targets" />
+  <!-- Specify pre- and post-build commands in the BeforeBuild and 
+       AfterBuild targets below. -->
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <AutoAssignPort>True</AutoAssignPort>
+          <UseCustomServer>True</UseCustomServer>
+          <CustomServerUrl>http://localhost</CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}" User="">
+        <WebProjectProperties>
+          <StartPageUrl>
+          </StartPageUrl>
+          <StartAction>CurrentPage</StartAction>
+          <AspNetDebugging>True</AspNetDebugging>
+          <SilverlightDebugging>False</SilverlightDebugging>
+          <NativeDebugging>False</NativeDebugging>
+          <SQLDebugging>False</SQLDebugging>
+          <ExternalProgram>
+          </ExternalProgram>
+          <StartExternalURL>
+          </StartExternalURL>
+          <StartCmdLineArguments>
+          </StartCmdLineArguments>
+          <StartWorkingDirectory>
+          </StartWorkingDirectory>
+          <EnableENC>False</EnableENC>
+          <AlwaysStartWebServerOnDebug>False</AlwaysStartWebServerOnDebug>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>
