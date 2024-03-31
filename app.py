@@ -104,7 +104,7 @@ def get_db_connection():
         thread_local.db = pymysql.connect(
             host='localhost',
             user='root',
-            password='Themba2002!',
+            password='root',
             database='cce_experiments',
             cursorclass=pymysql.cursors.DictCursor
         )
@@ -773,13 +773,17 @@ def handleItemIds(pID, current_item_ids, bot):
 ##################  Group totem game ###########################
 @app.route("/groupTotem")
 def groupTotem():
-    if not bot_controllers[session['experimentID']].game_started:
-        bot_controllers[session['experimentID']].game_started = True
-
     # Valid session check
     if 'experiment_type' in session:
         if session['experiment_type'] == 0:
             return redirect("/individualTotem")
+
+    if session['experimentID'] in bot_controllers and not bot_controllers[session['experimentID']].game_started:
+        bot_controllers[session['experimentID']].game_started = True
+    elif session['experimentID'] not in bot_controllers and session['experiment_type'] == 1:
+        return redirect("/groupIntro")
+
+
 
     # Open up a connection to the DB
     connection = get_db_connection()
