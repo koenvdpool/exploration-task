@@ -6,13 +6,11 @@ class RobotController:
     def __init__(self):
         self.discovered_items = []
         self.bots = []
-        self.bots_setup = False
         self.game_started = False
         self.social_learning_percentage = None
 
     def add_bot(self, pID):
         self.bots.append(Robot(pID))
-        self.bots_setup = True
 
     def choose_selection(self, bot, item_ids):
         # Choose how many spots to fill (1,2 or 3)

@@ -14,38 +14,52 @@ app.secret_key = datetime.now().isoformat()
 # Thread-local storage for database connections
 thread_local = threading.local()
 
-BOT_NUM = None
 SLEEP_TIME = 8
-bot_controller = RobotController()
+bot_controllers = {}
 session_experiment_id = None
-human_discovered_items = []
+human_discovered_items = {}
+config = {
+    0: {'botNums': 5, 'perSoc': 100, 'isSemantic': 1},
+    1: {'botNums': 5, 'perSoc': 90, 'isSemantic': 0},
+    2: {'botNums': 5, 'perSoc': 80, 'isSemantic': 1},
+    3: {'botNums': 5, 'perSoc': 70, 'isSemantic': 1},
+    4: {'botNums': 5, 'perSoc': 60, 'isSemantic': 1},
+    5: {'botNums': 5, 'perSoc': 50, 'isSemantic': 1},
+    6: {'botNums': 5, 'perSoc': 40, 'isSemantic': 1},
+    7: {'botNums': 5, 'perSoc': 30, 'isSemantic': 1},
+    8: {'botNums': 5, 'perSoc': 20, 'isSemantic': 1},
+    9: {'botNums': 5, 'perSoc': 10, 'isSemantic': 1},
+    10: {'botNums': 5, 'perSoc': 0, 'isSemantic': 1},
+}
 
 
-def background_task():
+def background_task(sessionID):
     while True:
         time.sleep(SLEEP_TIME)  # Wait for 8 seconds
-        if not bot_controller.game_started:
+
+        if not bot_controllers[sessionID].game_started:
             continue
 
         this_round_discovered_items = []
         global human_discovered_items
         # Add human discovered items to controller class for bot social learning
-        if human_discovered_items:
-            print(f'Adding {human_discovered_items} to controller for bots social leaning')
-            bot_controller.discovered_items += human_discovered_items
+        if human_discovered_items[sessionID]:
+            print(f'Adding {human_discovered_items[sessionID]} to controller for bots social leaning')
+            bot_controllers[sessionID].discovered_items += human_discovered_items[sessionID]
             # Clear after adding to prevent bots from checking unnecessarily
-            human_discovered_items = []
-        for bot in bot_controller.bots:
+            human_discovered_items[sessionID] = []
+        for bot in bot_controllers[sessionID].bots:
             # Get available item ids for bot
             itemIds = get_available_item_ids_by_pid(bot.pID)
 
-            # Social learning
-            social_learning_trials = bot_controller.apply_social_learning(bot, itemIds)
-            # Handle all social learning trials
-            [handleItemIds(bot.pID, social_trial, bot) for social_trial in social_learning_trials]
+            if bot_controllers[sessionID].social_learning_percentage > 0:
+                # Social learning
+                social_learning_trials = bot_controllers[sessionID].apply_social_learning(bot, itemIds)
+                # Handle all social learning trials
+                [handleItemIds(bot.pID, social_trial, bot) for social_trial in social_learning_trials]
 
             # Make a choice and handle selection
-            trial = bot_controller.choose_selection(bot, itemIds)
+            trial = bot_controllers[sessionID].choose_selection(bot, itemIds)
             discovered = handleItemIds(bot.pID, trial, bot)
 
             # Append newly discovered items to the list for social learning
@@ -53,12 +67,12 @@ def background_task():
                 this_round_discovered_items.append({'pID': bot.pID, 'item': discovered, 'solution': trial})
 
         # Append discovered item to controller so that social learning can be applied next round
-        bot_controller.discovered_items = this_round_discovered_items
+        bot_controllers[sessionID].discovered_items = this_round_discovered_items
 
 
 def activate_background_task(session):
     # Add bots
-    for _ in range(int(BOT_NUM)):
+    for _ in range(int(session['botNums'])):
         pID = addNewParticipantToExperiment(1, session['experimentID'], True)
         connection = get_db_connection()
         cursor = connection.cursor()
@@ -67,12 +81,17 @@ def activate_background_task(session):
                        (session['experimentID']))
         connection.commit()
         cursor.close()
-        bot_controller.add_bot(pID)
+        if session['experimentID'] not in bot_controllers:
+            bot_controllers[session['experimentID']] = RobotController()
+            human_discovered_items[session['experimentID']] = []
+        bot_controllers[session['experimentID']].social_learning_percentage = session['perSoc']
+        bot_controllers[session['experimentID']].add_bot(pID)
 
         # Add default item ids for bots
         getGamestateForParticipant(pID)
 
-    thread = threading.Thread(target=background_task)
+    # Start background task with session['experimentID'] as parameter
+    thread = threading.Thread(target=background_task, args=(session['experimentID'],))
     thread.daemon = True  # Daemonize the thread to shut down with the app
     thread.start()
 
@@ -85,7 +104,7 @@ def get_db_connection():
         thread_local.db = pymysql.connect(
             host='localhost',
             user='root',
-            password='root',
+            password='Themba2002!',
             database='cce_experiments',
             cursorclass=pymysql.cursors.DictCursor
         )
@@ -119,7 +138,7 @@ def home():
     return render_template("IndIntro.html", semantic_extension=session['semantic_extension'])
 
 
-# http://127.0.0.1:5000/groupIntro?numBots=5&perSOC=50&isSemantic=1
+# http://127.0.0.1:5000/groupIntro?numBots=5&perSoc=50&isSemantic=1
 ################### Home page group ##################
 @app.route("/groupIntro")
 def groupIntro():
@@ -128,20 +147,21 @@ def groupIntro():
     sessionID = request.args.get('sesid')
     bot_num = int(request.args.get('numBots', 0))
     is_semantic = int(request.args.get('isSemantic', 0))
-    perSOC = int(request.args.get('perSOC', 100))
+    perSoc = int(request.args.get('perSoc', 100))
 
     if 'prolificID' not in session:
-        global BOT_NUM
+        # global BOT_NUM
         session['prolificID'] = prolificID
         session['studyID'] = studyID
         session['sessionID'] = sessionID
-        session['bot_num'] = bot_num
-        session['semantic_extension'] = "-semantic" if is_semantic == 1 else ""
-        session['perSOC'] = perSOC
-        bot_controller.social_learning_percentage = perSOC
-        BOT_NUM = 5 if bot_num > 5 else bot_num
+        # session['bot_num'] = bot_num
+        # session['semantic_extension'] = "-semantic" if is_semantic == 1 else ""
+        # session['perSoc'] = perSoc
+        # bot_controller.social_learning_percentage = perSoc
+        # BOT_NUM = 5 if bot_num > 5 else bot_num
 
-    return render_template("groupIntro.html", semantic_extension=session['semantic_extension'])
+    # TODO: Fix semantic extension
+    return render_template("groupIntro.html", semantic_extension="")
 
 
 ################### NO ID PAGE ##################
@@ -286,10 +306,35 @@ def groupStart():
             session_experiment_id = expID
             session['experimentID'] = expID
 
+            # Get latest game
+            cursor.execute(
+                'SELECT started, isSemantic, perSoc, botNums FROM cce_experiments.experiments ORDER BY StartTime DESC LIMIT 1')
+            latest_config = cursor.fetchone()
+
+            # Get first config if first game
+            if not latest_config:
+                latest_config = config.get(0)
+            elif latest_config['started'] == 0:
+                # Get config from latest game that hasen't started yet
+                latest_config = {'botNums': latest_config['botNums'], 'perSoc': latest_config['perSoc'],
+                                 'isSemantic': latest_config['isSemantic']}
+            else:
+                # Get index of latest game config and get next one from it
+                index = list(config.values()).index(
+                    {'botNums': latest_config['botNums'], 'perSoc': latest_config['perSoc'],
+                     'isSemantic': latest_config['isSemantic']})
+                latest_config = config.get(index + 1 if index < (len(config) - 1) else 0)
+
+            session['botNums'] = latest_config['botNums']
+            session['perSoc'] = latest_config['perSoc']
+            session['semantic_extension'] = '-semantic' if latest_config['isSemantic'] == 1 else ''
+
             # Insert the experiment with the above generated data
             cursor.execute('INSERT INTO cce_experiments.experiments VALUES \
                 (%s, 1, NULL, NULL, 1, %s, %s, %s, NULL, 0, %s, %s, %s, %s)', (
-                expID, session['prolificID'], session['studyID'], session['sessionID'], session['stored_datetime'], True if len(session['semantic_extension']) > 0 else False, session['perSOC'], session['bot_num']))
+                 expID, session['prolificID'], session['studyID'], session['sessionID'], session['stored_datetime'],
+                 True if len(session['semantic_extension']) > 0 else False, latest_config['perSoc'],
+                 latest_config['botNums']))
 
             # Commit transaction
             connection.commit()
@@ -301,13 +346,19 @@ def groupStart():
             # Commit transaction
             connection.commit()
 
-    if bot_controller.bots_setup is False:
-        activate_background_task(session)
-
     # Fetch all participants by experiment id
     cursor.execute(
         'SELECT * FROM cce_experiments.participants where experimentID = %s', (session['experimentID'],))
     nParticipants = cursor.fetchall()
+
+    # If there is only one participant, activate the background task (add bots since its a new game)
+    if len(nParticipants) == 1 and session['botNums'] > 0:
+        activate_background_task(session)
+
+    # Fetch all participants by experiment id
+    cursor.execute('SELECT * FROM cce_experiments.participants where experimentID = %s', (session['experimentID'],))
+    nParticipants = cursor.fetchall()
+
     cursor.close()
 
     return render_template("groupStart.html", participantCount=len(nParticipants))
@@ -634,7 +685,7 @@ def get_item_ids():
     current_item_ids = data.get('currentItemIds', [])
     discovered = handleItemIds(session['participantID'], current_item_ids, False)
     if discovered:
-        human_discovered_items.append(
+        human_discovered_items[session['experimentID']].append(
             {'pID': session['participantID'], 'item': discovered, 'solution': current_item_ids})
     return jsonify(message="Image IDs received")
 
@@ -722,8 +773,8 @@ def handleItemIds(pID, current_item_ids, bot):
 ##################  Group totem game ###########################
 @app.route("/groupTotem")
 def groupTotem():
-    if not bot_controller.game_started:
-        bot_controller.game_started = True
+    if not bot_controllers[session['experimentID']].game_started:
+        bot_controllers[session['experimentID']].game_started = True
 
     # Valid session check
     if 'experiment_type' in session:
@@ -900,7 +951,9 @@ def updateParticipantScores():
 
 @app.route('/expClosed')
 def expClosed():
-    bot_controller.game_started = False
+    bot_controllers[session['experimentID']].game_started = False
+    del bot_controllers[session['experimentID']]
+    del human_discovered_items[session['experimentID']]
     # Update experiment endtime with current datetime
     expID = session['experimentID']
     current_datetime = datetime.now().isoformat()
@@ -917,7 +970,9 @@ def expClosed():
 
 @app.route('/experimentComplete')
 def experimentComplete():
-    bot_controller.game_started = False
+    bot_controllers[session['experimentID']].game_started = False
+    del bot_controllers[session['experimentID']]
+    del human_discovered_items[session['experimentID']]
     if 'experimentID' in session:
         expID = session['experimentID']
 
