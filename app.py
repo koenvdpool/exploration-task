@@ -18,19 +18,7 @@ SLEEP_TIME = 8
 bot_controllers = {}
 session_experiment_id = None
 human_discovered_items = {}
-config = {
-    0: {'botNums': 5, 'perSoc': 100, 'isSemantic': 1},
-    1: {'botNums': 5, 'perSoc': 90, 'isSemantic': 0},
-    2: {'botNums': 5, 'perSoc': 80, 'isSemantic': 1},
-    3: {'botNums': 5, 'perSoc': 70, 'isSemantic': 1},
-    4: {'botNums': 5, 'perSoc': 60, 'isSemantic': 1},
-    5: {'botNums': 5, 'perSoc': 50, 'isSemantic': 1},
-    6: {'botNums': 5, 'perSoc': 40, 'isSemantic': 1},
-    7: {'botNums': 5, 'perSoc': 30, 'isSemantic': 1},
-    8: {'botNums': 5, 'perSoc': 20, 'isSemantic': 1},
-    9: {'botNums': 5, 'perSoc': 10, 'isSemantic': 1},
-    10: {'botNums': 5, 'perSoc': 0, 'isSemantic': 1},
-}
+config = {'botNums': 5, 'perSoc': 100, 'isSemantic': 1}
 
 
 def background_task(sessionID):
@@ -48,26 +36,50 @@ def background_task(sessionID):
             bot_controllers[sessionID].discovered_items += human_discovered_items[sessionID]
             # Clear after adding to prevent bots from checking unnecessarily
             human_discovered_items[sessionID] = []
+
+        # Filter bot_controllers[sessionID].discovered_items to remove items that have already been discovered
+        filtered_discovered_items = []
+        for discovered in bot_controllers[sessionID].discovered_items:
+            if discovered['item'] in filtered_discovered_items:
+                continue
+            else:
+                filtered_discovered_items.append(discovered)
+        bot_controllers[sessionID].discovered_items = filtered_discovered_items
+
+        print(f'Filtered discovered items: {bot_controllers[sessionID].discovered_items}')
+
         for bot in bot_controllers[sessionID].bots:
+
             # Get available item ids for bot
-            itemIds = get_available_item_ids_by_pid(bot.pID)
+            available_item_ids = get_available_item_ids_by_pid(bot.pID)
 
-            if bot_controllers[sessionID].social_learning_percentage > 0:
-                # Social learning
-                social_learning_trials = bot_controllers[sessionID].apply_social_learning(bot, itemIds)
-                # Handle all social learning trials
-                [handleItemIds(bot.pID, social_trial, bot) for social_trial in social_learning_trials]
+            social_learning_trial = None
 
-            # Make a choice and handle selection
-            trial = bot_controllers[sessionID].choose_selection(bot, itemIds)
-            discovered = handleItemIds(bot.pID, trial, bot)
+            print(f'\n\nBot-{bot.pID} can pick {available_item_ids}')
 
-            # Append newly discovered items to the list for social learning
-            if discovered:
-                this_round_discovered_items.append({'pID': bot.pID, 'item': discovered, 'solution': trial})
+            rand_number = np.random.randint(1, 101)
+
+            print(f'Bot-{bot.pID} got {rand_number} for social learning, config: {config["perSoc"]}')
+
+            # Social learning
+            if rand_number <= config['perSoc']:
+                social_learning_trial = bot_controllers[sessionID].apply_social_learning(bot, available_item_ids)
+
+            if social_learning_trial:
+                # Handle social learning trials
+                handleItemIds(bot.pID, social_learning_trial, bot)
+            # If no social learning trial is found, make a random selection
+            else:
+                # Make a choice and handle selection
+                trial = bot_controllers[sessionID].pick_random_selection(bot, available_item_ids)
+                discovered = handleItemIds(bot.pID, trial, bot)
+
+                # Append newly discovered items to the list for social learning
+                if discovered:
+                    this_round_discovered_items.append({'pID': bot.pID, 'item': discovered, 'solution': trial})
 
         # Append discovered item to controller so that social learning can be applied next round
-        bot_controllers[sessionID].discovered_items = this_round_discovered_items
+        bot_controllers[sessionID].discovered_items += this_round_discovered_items
 
 
 def activate_background_task(session):
@@ -306,35 +318,16 @@ def groupStart():
             session_experiment_id = expID
             session['experimentID'] = expID
 
-            # Get latest game
-            cursor.execute(
-                'SELECT started, isSemantic, perSoc, botNums FROM cce_experiments.experiments ORDER BY StartTime DESC LIMIT 1')
-            latest_config = cursor.fetchone()
-
-            # Get first config if first game
-            if not latest_config:
-                latest_config = config.get(0)
-            elif latest_config['started'] == 0:
-                # Get config from latest game that hasen't started yet
-                latest_config = {'botNums': latest_config['botNums'], 'perSoc': latest_config['perSoc'],
-                                 'isSemantic': latest_config['isSemantic']}
-            else:
-                # Get index of latest game config and get next one from it
-                index = list(config.values()).index(
-                    {'botNums': latest_config['botNums'], 'perSoc': latest_config['perSoc'],
-                     'isSemantic': latest_config['isSemantic']})
-                latest_config = config.get(index + 1 if index < (len(config) - 1) else 0)
-
-            session['botNums'] = latest_config['botNums']
-            session['perSoc'] = latest_config['perSoc']
-            session['semantic_extension'] = '-semantic' if latest_config['isSemantic'] == 1 else ''
+            session['botNums'] = config['botNums']
+            session['perSoc'] = config['perSoc']
+            session['semantic_extension'] = '-semantic' if config['isSemantic'] == 1 else ''
 
             # Insert the experiment with the above generated data
             cursor.execute('INSERT INTO cce_experiments.experiments VALUES \
                 (%s, 1, NULL, NULL, 1, %s, %s, %s, NULL, 0, %s, %s, %s, %s)', (
                  expID, session['prolificID'], session['studyID'], session['sessionID'], session['stored_datetime'],
-                 True if len(session['semantic_extension']) > 0 else False, latest_config['perSoc'],
-                 latest_config['botNums']))
+                 True if len(session['semantic_extension']) > 0 else False, config['perSoc'],
+                 config['botNums']))
 
             # Commit transaction
             connection.commit()
