@@ -14,7 +14,7 @@ app.secret_key = datetime.now().isoformat()
 # Thread-local storage for database connections
 thread_local = threading.local()
 
-SLEEP_TIME = 8
+SLEEP_TIME = 10.5
 bot_controllers = {}
 session_experiment_id = None
 human_discovered_items = {}
