@@ -19,6 +19,8 @@ bot_controllers = {}
 session_experiment_id = None
 human_discovered_items = {}
 config = {'botNums': 5, 'perSoc': 100, 'isSemantic': 1}
+SEMANTIC_FORM_URL = "https://forms.gle/i3iP1zGDfiNe1niR6"
+NON_SEMANTIC_FORM_URL = "https://forms.gle/mnNF81AzcdZSNjRcA"
 
 
 def background_task(sessionID):
@@ -55,7 +57,7 @@ def background_task(sessionID):
 
             social_learning_trial = None
 
-            print(f'\n\nBot-{bot.pID} can pick {available_item_ids}')
+            print(f'\n\nBot-{bot.pID} trial {bot.number_of_trials} can pick {available_item_ids}')
 
             rand_number = np.random.randint(1, 101)
 
@@ -80,6 +82,7 @@ def background_task(sessionID):
 
         # Append discovered item to controller so that social learning can be applied next round
         bot_controllers[sessionID].discovered_items += this_round_discovered_items
+        print(f'Ended round of bot trials\n\n\n')
 
 
 def activate_background_task(session):
@@ -139,13 +142,12 @@ def home():
     prolificID = request.args.get('pid', default=np.random.randint(0, 10000000))
     studyID = request.args.get('sid')
     sessionID = request.args.get('sesid')
-    is_semantic = int(request.args.get('isSemantic', 0))
 
     if 'prolificID' not in session:
         session['prolificID'] = prolificID
         session['studyID'] = studyID
         session['sessionID'] = sessionID
-        session['semantic_extension'] = "-semantic" if is_semantic == 1 else ""
+        session['semantic_extension'] = "-semantic" if config['isSemantic'] == 1 else ""
 
     return render_template("IndIntro.html", semantic_extension=session['semantic_extension'])
 
@@ -157,23 +159,15 @@ def groupIntro():
     prolificID = request.args.get('pid', np.random.randint(0, 10000000))
     studyID = request.args.get('sid')
     sessionID = request.args.get('sesid')
-    bot_num = int(request.args.get('numBots', 0))
-    is_semantic = int(request.args.get('isSemantic', 0))
-    perSoc = int(request.args.get('perSoc', 100))
 
     if 'prolificID' not in session:
         # global BOT_NUM
         session['prolificID'] = prolificID
         session['studyID'] = studyID
         session['sessionID'] = sessionID
-        # session['bot_num'] = bot_num
-        # session['semantic_extension'] = "-semantic" if is_semantic == 1 else ""
-        # session['perSoc'] = perSoc
-        # bot_controller.social_learning_percentage = perSoc
-        # BOT_NUM = 5 if bot_num > 5 else bot_num
+        session['semantic_extension'] = "-semantic" if config['isSemantic'] == 1 else ""
 
-    # TODO: Fix semantic extension
-    return render_template("groupIntro.html", semantic_extension="")
+    return render_template("groupIntro.html", semantic_extension='-semantic' if config['isSemantic'] == 1 else '')
 
 
 ################### NO ID PAGE ##################
@@ -693,6 +687,7 @@ def handleItemIds(pID, current_item_ids, bot):
             else:
                 session['number_of_trials'] = 1
         else:
+            # Update bot state
             bot.number_of_trials += 1
 
         trialNum = session['number_of_trials'] if not bot else bot.number_of_trials
@@ -703,6 +698,8 @@ def handleItemIds(pID, current_item_ids, bot):
         # Convert to int, sort, convert back to string
         current_item_ids = [int(numeric_string) for numeric_string in current_item_ids]
         current_item_ids.sort()
+        if bot:
+            bot.submitted_trials.append(current_item_ids)
         current_item_ids = [str(numeric) for numeric in current_item_ids]
 
         # Append this string with the current item id delimited by a .
@@ -834,7 +831,7 @@ def btnParticipant():
         'Select itemID from cce_experiments.gamestate where participantID = %s and innoTrial!=0', (parID,))
     results = cursor.fetchall()
 
-    # Append all of the item ids
+    # Append all the item ids
     innoPar = []
     for row in results:
         innoPar.append({'name': row['itemID']})
@@ -993,8 +990,7 @@ def experimentComplete():
         return redirect("https://forms.gle/fZAmz7gy3ieqwhkz7")
     # experiment type is group play
     else:
-        return redirect("https://forms.gle/61hPEoCwrWb5VW7R6")
-    # return render_template('https://app.prolific.com/submissions/complete?cc=C1GS5IXU')
+        return redirect(NON_SEMANTIC_FORM_URL) if config['isSemantic'] == 0 else redirect(SEMANTIC_FORM_URL)
 
 
 def get_available_item_ids_by_pid(pid):

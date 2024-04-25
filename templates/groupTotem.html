@@ -105,7 +105,7 @@
                         var buttonResult = document.getElementById(data.button_id);
                         var txtArray = buttonResult.textContent.split(" ");
                         txtArray = txtArray.filter(value => value.length > 0)
-                        document.getElementById(data.button_id).textContent = txtArray[0] + " (score:" + data.score + ") " + txtArray[2];
+                        document.getElementById(data.button_id).textContent = txtArray[0] + " (score:" + data.score + ") ";
                     });
 
                     var currentTime = new Date(response.currentTime);
@@ -331,7 +331,7 @@
             {% for participant in participants %}
                 <button onclick="pButtonClicked('{{ participant[0] }}')" id="{{ participant[0] }}"
                         style="font-size:18px;height:35px;">Participant{{ participant[1] }} (score:{{ participant[2] }})
-                    {% if participant[3] %}(Robot){% else %} {% endif %} </button>
+                </button>
             {% endfor %}
 
             <div id="innoParticipant"></div>
