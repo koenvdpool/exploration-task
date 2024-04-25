@@ -27,6 +27,10 @@ def background_task(sessionID):
     while True:
         time.sleep(SLEEP_TIME)  # Wait for 8 seconds
 
+        if sessionID not in bot_controllers:
+            print('No bot controller found for this session, ending thread')
+            return
+
         if not bot_controllers[sessionID].game_started:
             continue
 
@@ -109,7 +113,6 @@ def activate_background_task(session):
     thread = threading.Thread(target=background_task, args=(session['experimentID'],))
     thread.daemon = True  # Daemonize the thread to shut down with the app
     thread.start()
-
 
 def get_db_connection():
     """

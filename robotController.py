@@ -17,18 +17,34 @@ class RobotController:
         spots_to_fill = random.choice([1, 2, 3])
         print(f'Bot-{bot.pID} is filling {spots_to_fill} spot(s)')
         # For every spot that will be filled, pick a random item
-        selected_item_ids = [int(random.choice(item_ids)) for _ in range(spots_to_fill)]
+        selected_item_ids = []
+
+        # Make sure bots chooses different items
+        while len(selected_item_ids) < spots_to_fill:
+            random_item = random.choice(item_ids)
+            if random_item not in selected_item_ids:
+                print(f'Bot-{bot.pID} appending: {random_item} to {selected_item_ids}')
+                selected_item_ids.append(random_item)
+
         selected_item_ids.sort()
 
         # Make sure bots don't submit the same trial twice
         while selected_item_ids in bot.submitted_trials:
-            print(f'Bot-{bot.pID} has already submitted {selected_item_ids} before')
-            selected_item_ids = [int(random.choice(item_ids)) for _ in range(spots_to_fill)]
+            print(f'Bot-{bot.pID} has already submitted {selected_item_ids} in {bot.submitted_trials}. Choosing again')
+            spots_to_fill = random.choice([1, 2, 3])
+            print(f'Bot-{bot.pID} is filling {spots_to_fill} spot(s)')
+            selected_item_ids = []
+            # Make sure bots chooses different items
+            while len(selected_item_ids) < spots_to_fill:
+                random_item = random.choice(item_ids)
+                if random_item not in selected_item_ids:
+                    print(f'Bot-{bot.pID} appending: {random_item} to {selected_item_ids}')
+                    selected_item_ids.append(random_item)
+
             selected_item_ids.sort()
 
         selected_item_ids = [str(id) for id in selected_item_ids]
-        print(f'Bot-{bot.pID}\'s selection: {item_ids}')
-        print(f'Bot-{bot.pID} chose: {selected_item_ids}')
+        print(f'Bot-{bot.pID} chose trial: {selected_item_ids}')
         return selected_item_ids
 
     def apply_social_learning(self, bot, botItemIds):
