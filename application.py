@@ -6,10 +6,11 @@ import pymysql.cursors
 import threading
 import numpy as np
 
+from db import db_config
 from robotController import RobotController
 
-app = Flask(__name__)
-app.secret_key = datetime.now().isoformat()
+application = Flask(__name__)
+application.secret_key = datetime.now().isoformat()
 
 # Thread-local storage for database connections
 thread_local = threading.local()
@@ -120,16 +121,16 @@ def get_db_connection():
     """
     if not hasattr(thread_local, "db"):
         thread_local.db = pymysql.connect(
-            host='localhost',
-            user='root',
-            password='root',
-            database='cce_experiments',
+            host=db_config['host'],
+            user=db_config['user'],
+            password=db_config['password'],
+            database=db_config['database'],
             cursorclass=pymysql.cursors.DictCursor
         )
     return thread_local.db
 
 
-@app.teardown_appcontext
+@application.teardown_appcontext
 def close_db_connection(exception=None):
     """
     Close the database connection at the end of the request.
@@ -140,7 +141,7 @@ def close_db_connection(exception=None):
 
 
 ################### Home page ##################
-@app.route("/")
+@application.route("/")
 def home():
     prolificID = request.args.get('pid', default=np.random.randint(0, 10000000))
     studyID = request.args.get('sid')
@@ -157,7 +158,7 @@ def home():
 
 # http://127.0.0.1:5000/groupIntro?numBots=5&perSoc=50&isSemantic=1
 ################### Home page group ##################
-@app.route("/groupIntro")
+@application.route("/groupIntro")
 def groupIntro():
     prolificID = request.args.get('pid', np.random.randint(0, 10000000))
     studyID = request.args.get('sid')
@@ -174,13 +175,13 @@ def groupIntro():
 
 
 ################### NO ID PAGE ##################
-@app.route("/noID")
+@application.route("/noID")
 def noID():
     return render_template("noID.html")
 
 
 ################### GROUP PLAY SELECTION OPTIONS ##################
-@app.route("/groupPlay")
+@application.route("/groupPlay")
 def groupPlay():
     # Check for participant id
     if 'participantID' in session:
@@ -195,7 +196,7 @@ def groupPlay():
 
 
 # check if the experiment code matches to the experiment created, and if so join
-@app.route('/groupPlay/joinExperiment', methods=['POST'])
+@application.route('/groupPlay/joinExperiment', methods=['POST'])
 def joinExperiment():
     # Fetch data
     data = request.get_json()
@@ -235,7 +236,7 @@ def joinExperiment():
 
 
 ################### GROUP EXPERIMENT START ##################
-@app.route('/groupStart')
+@application.route('/groupStart')
 def groupStart():
     if 'participantID' in session:
         if session['experiment_type'] == 0:
@@ -354,7 +355,7 @@ def groupStart():
     return render_template("groupStart.html", participantCount=len(nParticipants))
 
 
-@app.route('/checkParticipants', methods=['POST'])
+@application.route('/checkParticipants', methods=['POST'])
 def checkParticipants():
     # Open up a connection to the DB
     connection = get_db_connection()
@@ -386,7 +387,7 @@ def checkParticipants():
     return jsonify({'data': experiment['nParticipants'], 'limit': 6, 'elapsedTime': minStr + ":" + secStr})
 
 
-@app.route('/checkElapsedTime', methods=['POST'])
+@application.route('/checkElapsedTime', methods=['POST'])
 def checkElapsedTime():
     current_datetime = datetime.now().isoformat()
     return jsonify({'currentTime': current_datetime, 'startTime': session['stored_datetime']})
@@ -528,7 +529,7 @@ def getGamestateForParticipant(pID):
 
 
 #####  Individual totem game
-@app.route("/individualTotem")
+@application.route("/individualTotem")
 def individualTotem():
     # Back to homepage
     if 'prolificID' not in session:
@@ -557,7 +558,7 @@ def individualTotem():
                            score=session['score'], semantic_extension=session['semantic_extension'])
 
 
-@app.route("/totemTutorial")
+@application.route("/totemTutorial")
 def totemTutorial():
     if 'tutorialScore' not in session:
         session['tutorialTrials'] = 0
@@ -583,7 +584,7 @@ def totemTutorial():
                            semantic_extension=session['semantic_extension'])
 
 
-@app.route('/tutorial', methods=['POST'])
+@application.route('/tutorial', methods=['POST'])
 def tutorial():
     data = request.json
     current_item_ids = data.get('currentItemIds', [])
@@ -624,7 +625,7 @@ def tutorial():
     return jsonify(message="Image IDs received")
 
 
-@app.route('/tutorialTimeUpdate', methods=['POST'])
+@application.route('/tutorialTimeUpdate', methods=['POST'])
 def tutorialTimeUpdate():
     button_ids = [0, 1, 2, 3, 4, 5]
     scores = [15, 0, 0, 0, 0, 0]
@@ -635,7 +636,7 @@ def tutorialTimeUpdate():
     return jsonify({'data': response_data})
 
 
-@app.route('/btnParticipantTutorial', methods=['POST'])
+@application.route('/btnParticipantTutorial', methods=['POST'])
 def btnParticipantTutorial():
     data = request.get_json()
     parID = data.get('buttonId', '')
@@ -645,7 +646,7 @@ def btnParticipantTutorial():
     return jsonify(innoPar)
 
 
-@app.route('/dispRuleTutorial', methods=['POST'])
+@application.route('/dispRuleTutorial', methods=['POST'])
 def dispRuleTutorial():
     data = request.get_json()
     itemID = data.get('item', '')
@@ -669,7 +670,7 @@ def dispRuleTutorial():
     return jsonify(rItems)
 
 
-@app.route('/get_item_ids', methods=['POST'])
+@application.route('/get_item_ids', methods=['POST'])
 def get_item_ids():
     data = request.json
     current_item_ids = data.get('currentItemIds', [])
@@ -764,7 +765,7 @@ def handleItemIds(pID, current_item_ids, bot):
 
 
 ##################  Group totem game ###########################
-@app.route("/groupTotem")
+@application.route("/groupTotem")
 def groupTotem():
     # Valid session check
     if 'experiment_type' in session:
@@ -820,7 +821,7 @@ def groupTotem():
                            semantic_extension=session['semantic_extension'])
 
 
-@app.route('/btnParticipant', methods=['POST'])
+@application.route('/btnParticipant', methods=['POST'])
 def btnParticipant():
     data = request.get_json()
     parID = data.get('buttonId', '')
@@ -866,7 +867,7 @@ def btnParticipant():
     return jsonify(innoPar)
 
 
-@app.route('/dispRule', methods=['POST'])
+@application.route('/dispRule', methods=['POST'])
 def dispRule():
     data = request.get_json()
     itemID = data.get('item', '')
@@ -919,7 +920,7 @@ def dispRule():
     return jsonify(rItems)
 
 
-@app.route('/updateParticipantScores', methods=['POST'])
+@application.route('/updateParticipantScores', methods=['POST'])
 def updateParticipantScores():
     button_ids = request.json['button_ids']
     response_data = []
@@ -946,7 +947,7 @@ def updateParticipantScores():
 
 ##################  Group totem game ###########################
 
-@app.route('/expClosed')
+@application.route('/expClosed')
 def expClosed():
     bot_controllers[session['experimentID']].game_started = False
     del bot_controllers[session['experimentID']]
@@ -965,7 +966,7 @@ def expClosed():
     return render_template('expClosed.html')
 
 
-@app.route('/experimentComplete')
+@application.route('/experimentComplete')
 def experimentComplete():
     bot_controllers[session['experimentID']].game_started = False
     del bot_controllers[session['experimentID']]
@@ -995,7 +996,6 @@ def experimentComplete():
     else:
         return redirect(NON_SEMANTIC_FORM_URL) if config['isSemantic'] == 0 else redirect(SEMANTIC_FORM_URL)
 
-
 def get_available_item_ids_by_pid(pid):
     # Open up a connection to the DB
     connection = get_db_connection()
@@ -1010,4 +1010,4 @@ def get_available_item_ids_by_pid(pid):
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=True, port=5000, threaded=True)
+    application.run(host='0.0.0.0', debug=True, port=80, threaded=True)

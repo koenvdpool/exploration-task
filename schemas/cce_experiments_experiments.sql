@@ -34,6 +34,9 @@ CREATE TABLE `experiments` (
   `code` varchar(10) DEFAULT NULL,
   `started` int DEFAULT '0',
   `waitingStartTime` datetime DEFAULT NULL,
+  `isSemantic` bool DEFAULT NULL,
+  `perSOC` int DEFAULT NULL,
+  `botNums` int DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
