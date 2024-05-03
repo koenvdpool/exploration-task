@@ -4,5 +4,5 @@ db.py
 application.zip
 
 venv
-
+.venv
 __pycache__
