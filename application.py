@@ -19,7 +19,7 @@ SLEEP_TIME = 10.5
 bot_controllers = {}
 session_experiment_id = None
 human_discovered_items = {}
-config = {'botNums': 5, 'perSoc': 100, 'isSemantic': 1}
+config = {'botNums': 3, 'perSoc': 100, 'isSemantic': 1}
 SEMANTIC_FORM_URL = "https://forms.gle/i3iP1zGDfiNe1niR6"
 NON_SEMANTIC_FORM_URL = "https://forms.gle/mnNF81AzcdZSNjRcA"
 
@@ -35,8 +35,25 @@ def background_task(sessionID):
         if not bot_controllers[sessionID].game_started:
             continue
 
-        this_round_discovered_items = []
         global human_discovered_items
+
+        # Calculate the elapsed time in minutes from starting time
+        current_datetime = datetime.now()
+        started_time = datetime.fromisoformat(bot_controllers[sessionID].start_date)
+        c = current_datetime - started_time
+        minutes = c.total_seconds() / 60
+        if minutes >= 10:
+            print(f'Elapsed time: {minutes} minutes, ending thread')
+            try:
+                bot_controllers[sessionID].game_started = False
+                del bot_controllers[sessionID]
+                if human_discovered_items is not None and sessionID in human_discovered_items:
+                    del human_discovered_items[sessionID]
+            except:
+                pass
+            return
+
+        this_round_discovered_items = []
         # Add human discovered items to controller class for bot social learning
         if human_discovered_items[sessionID]:
             print(f'Adding {human_discovered_items[sessionID]} to controller for bots social leaning')
@@ -774,6 +791,7 @@ def groupTotem():
 
     if session['experimentID'] in bot_controllers and not bot_controllers[session['experimentID']].game_started:
         bot_controllers[session['experimentID']].game_started = True
+        bot_controllers[session['experimentID']].start_date = datetime.now().isoformat()
     elif session['experimentID'] not in bot_controllers and session['experiment_type'] == 1:
         return redirect("/groupIntro")
 
@@ -968,9 +986,13 @@ def expClosed():
 
 @application.route('/experimentComplete')
 def experimentComplete():
-    bot_controllers[session['experimentID']].game_started = False
-    del bot_controllers[session['experimentID']]
-    del human_discovered_items[session['experimentID']]
+    try:
+        bot_controllers[session['experimentID']].game_started = False
+        del bot_controllers[session['experimentID']]
+        del human_discovered_items[session['experimentID']]
+    except:
+        pass
+
     if 'experimentID' in session:
         expID = session['experimentID']
 

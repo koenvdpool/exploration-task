@@ -8,6 +8,7 @@ class RobotController:
         self.bots = []
         self.game_started = False
         self.social_learning_percentage = None
+        self.start_date = None
 
     def add_bot(self, pID):
         self.bots.append(Robot(pID))
