@@ -160,7 +160,7 @@ def close_db_connection(exception=None):
 ################### Home page ##################
 @application.route("/")
 def home():
-    prolificID = request.args.get('pid', default=np.random.randint(0, 10000000))
+    prolificID = request.args.get('pid')
     studyID = request.args.get('sid')
     sessionID = request.args.get('sesid')
 
@@ -177,7 +177,7 @@ def home():
 ################### Home page group ##################
 @application.route("/groupIntro")
 def groupIntro():
-    prolificID = request.args.get('pid', np.random.randint(0, 10000000))
+    prolificID = request.args.get('pid')
     studyID = request.args.get('sid')
     sessionID = request.args.get('sesid')
 
